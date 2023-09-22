@@ -16,9 +16,9 @@
  */
 
 #pragma once
-#define MASTER_LEFT
+// #define MASTER_LEFT
 // #define MASTER_RIGHT
-// #define EE_HANDS
+#define EE_HANDS
 #define SPLIT_WPM_ENABLE
 
 #if defined(KEYBOARD_sofle_rev1)

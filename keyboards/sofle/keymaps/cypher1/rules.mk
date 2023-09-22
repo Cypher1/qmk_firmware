@@ -1,8 +1,6 @@
 BOOTMAGIC_ENABLE = yes      # Enable Bootmagic Lite
-
 # Features
 OLED_ENABLE = yes			# Enable OLED for WPM, status and pet
-OLED_DRIVER = SSD1306
 ENCODER_ENABLE = yes		# Enable the two rotary encoders
 ENCODER_MAP_ENABLE = yes	# Use the new method for mapping encoders
 WPM_ENABLE = yes			# Used to make the pet walk or run based on typing
