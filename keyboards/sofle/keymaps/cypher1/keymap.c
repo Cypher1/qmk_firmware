@@ -55,17 +55,20 @@ enum combo_events {
   USR_CUT,
   USR_COPY,
   USR_PASTE,
+  USR_NEWTAB,
 };
 
 // Set up combos with modifiers.
 const uint16_t PROGMEM cut_combo[] = {KC_LCTL, KC_X, COMBO_END};
 const uint16_t PROGMEM copy_combo[] = {KC_LCTL, KC_C, COMBO_END};
 const uint16_t PROGMEM paste_combo[] = {KC_LCTL, KC_V, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {KC_LCTL, KC_T, COMBO_END};
 
 combo_t key_combos[] = {
   [USR_CUT] = COMBO_ACTION(cut_combo),
   [USR_COPY] = COMBO_ACTION(copy_combo),
   [USR_PASTE] = COMBO_ACTION(paste_combo),
+  [USR_NEWTAB] = COMBO_ACTION(tab_combo),
 };
 
 #if defined(ENCODER_MAP_ENABLE)
@@ -83,14 +86,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                         KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,   KC_EQL,
    KC_ESC,     KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                         KC_H,     KC_J,     KC_K,     KC_L,  KC_SCLN,  KC_QUOT,
   MT_LSHN,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,  KC_MUTE,  MS_BTN1,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,  MT_RSHN,
-                      KC_BSLS,  KC_LALT,  KC_LCTL,  KC_LGUI,   L1_SPC,  L2_BSPC,   L1_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
+                      KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   L1_SPC,  L2_BSPC,   L1_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
 ),
 [GAMES] = LAYOUT(
    KC_GRV,     KC_1,     KC_2,     KC_3,     KC_4,     KC_5,                         KC_6,     KC_7,     KC_8,     KC_9,     KC_0,  KC_MINS,
    KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                         KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,   KC_EQL,
    KC_ESC,     KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                         KC_H,     KC_J,     KC_K,     KC_L,  KC_SCLN,  KC_QUOT,
   KC_LSFT,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,  KC_MUTE,  MS_BTN1,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,   KC_ENT,
-                      KC_BSLS,  KC_LALT,  KC_LCTL,  KC_LGUI,   KC_SPC,  KC_BSPC,   L1_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
+                      KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   KC_SPC,  KC_BSPC,   L1_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
 ),
 [FUNCS] = LAYOUT(
   _______,    KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,                        KC_F6,    KC_F7,    KC_F8,    KC_F9,   KC_F10,   KC_F11,
@@ -123,17 +126,24 @@ void tap_super_with_key(uint16_t keycode, bool pressed) {
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
   // Map combos to custom keys.
+  uint16_t keycode = 0;
   switch(combo_index) {
     case USR_CUT:
-      tap_super_with_key(KC_X, pressed);
+      keycode = KC_X;
       break;
     case USR_COPY:
-      tap_super_with_key(KC_C, pressed);
+      keycode = KC_C;
       break;
     case USR_PASTE:
-      tap_super_with_key(KC_V, pressed);
+      keycode = KC_V;
       break;
+    case USR_NEWTAB:
+      keycode = KC_T;
+      break;
+    default:
+      return;
   }
+  tap_super_with_key(keycode, pressed);
 }
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
