@@ -25,8 +25,10 @@
 #define MS_BTN1 KC_MS_BTN1
 #define MS_BTN2 KC_MS_BTN2
 #define MS_BTN3 KC_MS_BTN3
-#define MS_W_UP KC_MS_WH_UP
-#define MS_W_DN KC_MS_WH_DOWN
+#define MS_WUP KC_MS_WH_UP
+#define MS_WDN KC_MS_WH_DOWN
+#define MS_WLFT KC_MS_WH_LEFT
+#define MS_WRGHT KC_MS_WH_RIGHT
 #define MS_UP KC_MS_UP
 #define MS_DOWN KC_MS_DOWN
 #define MS_LEFT KC_MS_LEFT
@@ -92,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 [FUNCS] = LAYOUT(
   _______,    KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,                        KC_F6,    KC_F7,    KC_F8,    KC_F9,   KC_F10,   KC_F11,
-  _______,  XXXXXXX,    KC_UP,  XXXXXXX,  KC_LBRC,  KC_RBRC,                      MS_W_DN,  MS_W_UP,  XXXXXXX,  XXXXXXX,  XXXXXXX,   KC_F12,
+  _______,  XXXXXXX,    KC_UP,  XXXXXXX,  KC_LBRC,  KC_RBRC,                      MS_WLFT,   MS_WDN,   MS_WUP, MS_WRGHT,  XXXXXXX,   KC_F12,
   _______,  KC_LEFT,  KC_DOWN,  KC_RGHT,  KC_HOME,   KC_END,                      MS_LEFT,  MS_DOWN,    MS_UP,  MS_RGHT,  XXXXXXX,  XXXXXXX,
   _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MINS,   KC_EQL, DF_QWERT,  MS_BTN1,  MS_BTN1,  MS_BTN3,  MS_BTN2,  XXXXXXX,  KC_BSLS,  _______,
                       _______,  _______,  _______,  _______,  _______,   KC_DEL,  _______,  _______,  _______,  _______
