@@ -15,10 +15,7 @@
   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
 
-// QMK CONFIG
-#define COMBO_TERM 300
 #include QMK_KEYBOARD_H
-
 #define ALT_TAB_TERM 750
 #define LF_SPC LT(FUNCS, KC_SPC)
 #define LC_BSPC LT(CNTRL, KC_BSPC)
