@@ -88,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                         KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,   KC_EQL,
    KC_ESC,     KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                         KC_H,     KC_J,     KC_K,     KC_L,  KC_SCLN,  KC_QUOT,
   KC_LSFT,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,  KC_MUTE,  ALT_TAB,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,  MT_RSHN,
-                      KC_BSLS,  KC_LALT,  KC_LGUI,  LF_LCTL,   KC_SPC,  LC_BSPC,   LF_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
+                      KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   KC_SPC,  LC_BSPC,   LF_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
 ),
 [FUNCS] = LAYOUT(
   _______,    KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,                        KC_F6,    KC_F7,    KC_F8,    KC_F9,   KC_F10,   KC_F11,
@@ -142,7 +142,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
       }
       alt_tab_timer = timer_read();
       tap_code16(KC_TAB);
-      break;
+      return;
     case RALT_TAB:
       if (!is_alt_tab_active) {
         register_code(KC_LALT);
@@ -150,7 +150,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
       }
       alt_tab_timer = timer_read();
       tap_code16(S(KC_TAB));
-      break;
+      return;
     default:
       return;
   }
