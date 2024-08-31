@@ -47,10 +47,6 @@ enum LAYERS {
 enum custom_keycodes {
   ALT_TAB,
   RALT_TAB,
-  USR_CUT,
-  USR_COPY,
-  USR_PASTE,
-  USR_NEWTAB,
   NONE = SAFE_RANGE,
 };
 
@@ -74,10 +70,10 @@ const uint16_t PROGMEM tab_combo[] = {KC_LCTL, KC_T, COMBO_END};
 combo_t key_combos[] = {
   [USR_HOME_COMBO] = COMBO(home_combo, KC_HOME),
   [USR_END_COMBO] = COMBO(end_combo, KC_END),
-  [USR_CUT_COMBO] = COMBO(cut_combo, USR_CUT),
-  [USR_COPY_COMBO] = COMBO(copy_combo, USR_COPY),
-  [USR_PASTE_COMBO] = COMBO(paste_combo, USR_PASTE),
-  [USR_NEWTAB_COMBO] = COMBO(tab_combo, USR_NEWTAB),
+  [USR_CUT_COMBO] = COMBO_ACTION(cut_combo),
+  [USR_COPY_COMBO] = COMBO_ACTION(copy_combo),
+  [USR_PASTE_COMBO] = COMBO_ACTION(paste_combo),
+  [USR_NEWTAB_COMBO] = COMBO_ACTION(tab_combo),
 };
 
 #if defined(ENCODER_MAP_ENABLE)
@@ -129,34 +125,18 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
   // Map combos to custom keys.
   uint16_t keycode = 0;
   switch(combo_index) {
-    case USR_CUT:
+    case USR_CUT_COMBO:
       keycode = KC_X;
       break;
-    case USR_COPY:
+    case USR_COPY_COMBO:
       keycode = KC_C;
       break;
-    case USR_PASTE:
+    case USR_PASTE_COMBO:
       keycode = KC_V;
       break;
-    case USR_NEWTAB:
+    case USR_NEWTAB_COMBO:
       keycode = KC_T;
       break;
-    case ALT_TAB:
-      if (!is_alt_tab_active) {
-        register_code(KC_LALT);
-        is_alt_tab_active = true;
-      }
-      alt_tab_timer = timer_read();
-      tap_code16(KC_TAB);
-      return;
-    case RALT_TAB:
-      if (!is_alt_tab_active) {
-        register_code(KC_LALT);
-        is_alt_tab_active = true;
-      }
-      alt_tab_timer = timer_read();
-      tap_code16(S(KC_TAB));
-      return;
     default:
       return;
   }
@@ -227,12 +207,35 @@ bool led_update_user(led_t led_state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    int pressed = record->event.pressed;
+
     switch (keycode) {
-            /* Smart Backspace Delete */
+        /* Custom keys! */
+        case ALT_TAB:
+          if (pressed) {
+              if (!is_alt_tab_active) {
+                register_code(KC_LALT);
+                is_alt_tab_active = true;
+              }
+              alt_tab_timer = timer_read();
+              tap_code16(KC_TAB);
+          }
+          break;
+        case RALT_TAB:
+          if (pressed) {
+              if (!is_alt_tab_active) {
+                register_code(KC_LALT);
+                is_alt_tab_active = true;
+              }
+              alt_tab_timer = timer_read();
+              tap_code16(S(KC_TAB));
+          }
+          break;
+        /* Pet animations! */
         case KC_RSFT:
         case KC_LSFT:
             // Set shift status for other modules to use.
-            if (record->event.pressed) {
+            if (pressed) {
               shift_held++;
             } else {
               shift_held--;
@@ -240,16 +243,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case KC_LCTL:
         case KC_RCTL:
-            update_pet_sneaking(record->event.pressed);
+            update_pet_sneaking(pressed);
             break;
         case LF_SPC:
         case KC_SPC:
-            if (record->event.pressed) {
+            if (pressed) {
               fn_held++;
             } else {
               fn_held--;
             }
-            update_pet_jump(record->event.pressed);
+            update_pet_jump(pressed);
             break;
     }
     return true;
