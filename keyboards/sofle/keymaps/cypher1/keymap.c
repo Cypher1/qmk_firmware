@@ -15,8 +15,11 @@
   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
 
+// QMK CONFIG
+#define COMBO_TERM 300
 #include QMK_KEYBOARD_H
-#define ALT_TAB_TIMEOUT 1250
+
+#define ALT_TAB_TERM 750
 #define LF_SPC LT(FUNCS, KC_SPC)
 #define LC_BSPC LT(CNTRL, KC_BSPC)
 #define MT_RSHN MT(MOD_RSFT, KC_ENT)
@@ -103,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,  _______,  _______,  _______,  _______,  _______,                      _______,  _______,  _______,  KC_LBRC,  KC_RBRC,  _______,
   _______,  _______,  _______,  _______,  _______,  _______,                      _______,  _______,  _______,  _______,  _______,  _______,
   _______,  _______,  _______,  _______,  _______,  _______,                      KC_LEFT,  KC_DOWN,    KC_UP,  KC_RGHT,  _______,  _______,
-  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  _______, RALT_TAB,  ALT_TAB,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  CM_TOGG, RALT_TAB,  ALT_TAB,  _______,  _______,  _______,  _______,  _______,  _______,
                       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 )
 };
@@ -122,7 +125,7 @@ void tap_super_with_key(uint16_t keycode, bool pressed) {
 }
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
-  // Map combos to custom keys.
+  // Map combos to custom actions.
   uint16_t keycode = 0;
   switch(combo_index) {
     case USR_CUT_COMBO:
@@ -144,7 +147,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 }
 
 void matrix_scan_user(void) {
-  if (is_alt_tab_active && timer_elapsed(alt_tab_timer) > ALT_TAB_TIMEOUT) {
+  if (is_alt_tab_active && timer_elapsed(alt_tab_timer) > ALT_TAB_TERM) {
     unregister_code(KC_LALT);
     is_alt_tab_active = false;
   }
@@ -212,23 +215,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         /* Custom keys! */
         case ALT_TAB:
+          if (!is_alt_tab_active) {
+            register_code(KC_LALT);
+            is_alt_tab_active = true;
+          }
+          alt_tab_timer = timer_read();
           if (pressed) {
-              if (!is_alt_tab_active) {
-                register_code(KC_LALT);
-                is_alt_tab_active = true;
-              }
-              alt_tab_timer = timer_read();
-              tap_code16(KC_TAB);
+            tap_code16(KC_TAB);
           }
           break;
         case RALT_TAB:
+          if (!is_alt_tab_active) {
+            register_code(KC_LALT);
+            is_alt_tab_active = true;
+          }
+          alt_tab_timer = timer_read();
           if (pressed) {
-              if (!is_alt_tab_active) {
-                register_code(KC_LALT);
-                is_alt_tab_active = true;
-              }
-              alt_tab_timer = timer_read();
-              tap_code16(S(KC_TAB));
+            register_code(KC_LSFT);
+            tap_code16(KC_TAB);
+            unregister_code(KC_LSFT);
           }
           break;
         /* Pet animations! */
