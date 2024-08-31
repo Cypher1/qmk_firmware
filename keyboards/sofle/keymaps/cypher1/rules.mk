@@ -1,3 +1,5 @@
+BOOTLOADER = atmel-dfu
+
 BOOTMAGIC_ENABLE = yes      # Enable Bootmagic Lite
 # Features
 OLED_ENABLE = yes			# Enable OLED for WPM, status and pet
