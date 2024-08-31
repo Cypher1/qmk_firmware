@@ -48,9 +48,9 @@ enum LAYERS {
 #include "oled.h"    // Include the oled (call the pet from here).
 
 enum custom_keycodes {
+  NONE = SAFE_RANGE, // MUST BE THE FIRST ITEM!!!
   ALT_TAB,
   RALT_TAB,
-  NONE = SAFE_RANGE,
 };
 
 enum combo_events {
