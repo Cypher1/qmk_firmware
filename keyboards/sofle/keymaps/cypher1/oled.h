@@ -27,9 +27,6 @@ static void put_layer_name(uint16_t layer) {
         case QWERT:
             oled_write_P(PSTR("Qwert"), false);
             break;
-        case GAMES:
-            oled_write_P(PSTR("Games"), false);
-            break;
         case FUNCS:
             oled_write_P(PSTR("Funcs"), false);
             break;
@@ -47,11 +44,6 @@ static void print_status_narrow(void) {
     oled_set_cursor(0, 0);
     put_layer_name(get_highest_layer(layer_state));
 
-    // Print current default layer
-    if (get_highest_layer(default_layer_state) != get_highest_layer(layer_state)) {
-      oled_set_cursor(0, 1);
-      put_layer_name(get_highest_layer(default_layer_state));
-    }
     oled_set_cursor(0, 2);
     data_str[DATA_LEN-1] = '\0';
     oled_write(data_str, false);

@@ -16,10 +16,10 @@
   */
 
 #include QMK_KEYBOARD_H
+#define ALT_TAB_TIMEOUT 1250
 #define LF_SPC LT(FUNCS, KC_SPC)
+#define LF_LCTL LT(FUNCS, KC_LCTL)
 #define LC_BSPC LT(CNTRL, KC_BSPC)
-#define DF_GAMES DF(GAMES)
-#define DF_QWERT DF(QWERT)
 #define MT_RSHN MT(MOD_RSFT, KC_ENT)
 #define MS_BTN1 KC_MS_BTN1
 #define MS_BTN2 KC_MS_BTN2
@@ -35,7 +35,6 @@
 
 enum LAYERS {
   QWERT, // All the bells and whistles for coding.
-  GAMES, // Simpler control scheme for games (e.g. space is just space).
   FUNCS, // Function keys (e.g. screen brightness, media keys).
   CNTRL, // Controls for the keyboard (e.g. brightness, colours) and mouse (buttons and movement).
 };
@@ -47,14 +46,20 @@ enum LAYERS {
 #include "oled.h"    // Include the oled (call the pet from here).
 
 enum custom_keycodes {
-    NONE = SAFE_RANGE,
-};
-
-enum combo_events {
+  ALT_TAB,
+  RALT_TAB,
   USR_CUT,
   USR_COPY,
   USR_PASTE,
   USR_NEWTAB,
+  NONE = SAFE_RANGE,
+};
+
+enum combo_events {
+  USR_CUT_COMBO,
+  USR_COPY_COMBO,
+  USR_PASTE_COMBO,
+  USR_NEWTAB_COMBO,
 };
 
 // Set up combos with modifiers.
@@ -64,16 +69,15 @@ const uint16_t PROGMEM paste_combo[] = {KC_LCTL, KC_V, COMBO_END};
 const uint16_t PROGMEM tab_combo[] = {KC_LCTL, KC_T, COMBO_END};
 
 combo_t key_combos[] = {
-  [USR_CUT] = COMBO_ACTION(cut_combo),
-  [USR_COPY] = COMBO_ACTION(copy_combo),
-  [USR_PASTE] = COMBO_ACTION(paste_combo),
-  [USR_NEWTAB] = COMBO_ACTION(tab_combo),
+  [USR_CUT_COMBO] = COMBO(cut_combo, USR_CUT),
+  [USR_COPY_COMBO] = COMBO(copy_combo, USR_COPY),
+  [USR_PASTE_COMBO] = COMBO(paste_combo, USR_PASTE),
+  [USR_NEWTAB_COMBO] = COMBO(tab_combo, USR_NEWTAB),
 };
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [QWERT] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD), ENCODER_CCW_CW(KC_DOWN, KC_UP) },
-    [GAMES] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD), ENCODER_CCW_CW(KC_DOWN, KC_UP) },
     [FUNCS] = { ENCODER_CCW_CW(MS_RGHT, MS_LEFT), ENCODER_CCW_CW(MS_DOWN, MS_UP) },
     [CNTRL] = { ENCODER_CCW_CW(KC_RGHT, KC_LEFT), ENCODER_CCW_CW(KC_DOWN, KC_UP) },
 };
@@ -85,27 +89,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                         KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,   KC_EQL,
    KC_ESC,     KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                         KC_H,     KC_J,     KC_K,     KC_L,  KC_SCLN,  KC_QUOT,
   KC_LSFT,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,  KC_MUTE,  MS_BTN1,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,  MT_RSHN,
-                      KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   LF_SPC,  LC_BSPC,   LF_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
-),
-[GAMES] = LAYOUT(
-   KC_GRV,     KC_1,     KC_2,     KC_3,     KC_4,     KC_5,                         KC_6,     KC_7,     KC_8,     KC_9,     KC_0,  KC_MINS,
-   KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                         KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,   KC_EQL,
-   KC_ESC,     KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                         KC_H,     KC_J,     KC_K,     KC_L,  KC_SCLN,  KC_QUOT,
-  KC_LSFT,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,  KC_MUTE,  MS_BTN1,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,  MT_RSHN,
-                      KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   KC_SPC,  KC_BSPC,   LF_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
+                      KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   KC_SPC,  LC_BSPC,   LF_SPC,  KC_PGUP,  KC_PGDN,  KC_BSLS
+                                                           //  KC_SPC,  KC_BSPC
 ),
 [FUNCS] = LAYOUT(
   _______,    KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,                        KC_F6,    KC_F7,    KC_F8,    KC_F9,   KC_F10,   KC_F11,
   _______,  XXXXXXX,    KC_UP,  XXXXXXX,  KC_LBRC,  KC_RBRC,                      MS_WLFT,   MS_WDN,   MS_WUP, MS_WRGHT,  XXXXXXX,   KC_F12,
   _______,  KC_LEFT,  KC_DOWN,  KC_RGHT,  KC_HOME,   KC_END,                      MS_LEFT,  MS_DOWN,    MS_UP,  MS_RGHT,  XXXXXXX,  XXXXXXX,
-  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MINS,   KC_EQL, DF_GAMES, DF_QWERT,  MS_BTN1,  MS_BTN3,  MS_BTN2,  XXXXXXX,  KC_BSLS,  _______,
+  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MINS,   KC_EQL,  ALT_TAB, RALT_TAB,  MS_BTN1,  MS_BTN3,  MS_BTN2,  XXXXXXX,  KC_BSLS,  _______,
                       _______,  _______,  _______,  _______,  _______,   KC_DEL,  _______,  _______,  _______,  _______
 ),
 [CNTRL] = LAYOUT(
   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,                      XXXXXXX,  XXXXXXX,  XXXXXXX,  KC_LBRC,  KC_RBRC,  XXXXXXX,
   XXXXXXX,  XXXXXXX,    MS_UP,  XXXXXXX,  XXXXXXX,  XXXXXXX,                      XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,
   XXXXXXX,  MS_LEFT,  MS_DOWN,  MS_RGHT,  XXXXXXX,  XXXXXXX,                      KC_LEFT,  KC_DOWN,    KC_UP,  KC_RGHT,  XXXXXXX,  XXXXXXX,
-  KC_LSFT,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, DF_GAMES, DF_QWERT,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  MT_RSHN,
+  KC_LSFT,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  _______,  _______,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  MT_RSHN,
                       XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX
 )
 };
@@ -139,15 +137,38 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     case USR_NEWTAB:
       keycode = KC_T;
       break;
+    case ALT_TAB:
+      if (!is_alt_tab_active) {
+        register_code(KC_LALT);
+        is_alt_tab_active = true;
+      }
+      alt_tab_timer = timer_read();
+      tap_code16(KC_TAB);
+      break;
+    case RALT_TAB:
+      if (!is_alt_tab_active) {
+        register_code(KC_LALT);
+        is_alt_tab_active = true;
+      }
+      alt_tab_timer = timer_read();
+      tap_code16(S(KC_TAB));
+      break;
     default:
       return;
   }
   tap_super_with_key(keycode, pressed);
 }
 
+void matrix_scan_user(void) {
+  if (is_alt_tab_active && timer_elapsed(alt_tab_timer) > ALT_TAB_TIMEOUT) {
+    unregister_code(KC_LALT);
+    is_alt_tab_active = false;
+  }
+}
+
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     /* Disable combos when gaming layer is the default */
-    return default_layer_state != GAMES;
+    return true;
 }
 
 bool data_reset;
