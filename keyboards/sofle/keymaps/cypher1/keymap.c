@@ -55,6 +55,8 @@ enum custom_keycodes {
 };
 
 enum combo_events {
+  USR_HOME_COMBO,
+  USR_END_COMBO,
   USR_CUT_COMBO,
   USR_COPY_COMBO,
   USR_PASTE_COMBO,
@@ -62,12 +64,16 @@ enum combo_events {
 };
 
 // Set up combos with modifiers.
+const uint16_t PROGMEM home_combo[] = {KC_SPC, KC_F, COMBO_END};
+const uint16_t PROGMEM end_combo[] = {KC_SPC, KC_G, COMBO_END};
 const uint16_t PROGMEM cut_combo[] = {KC_LCTL, KC_X, COMBO_END};
 const uint16_t PROGMEM copy_combo[] = {KC_LCTL, KC_C, COMBO_END};
 const uint16_t PROGMEM paste_combo[] = {KC_LCTL, KC_V, COMBO_END};
 const uint16_t PROGMEM tab_combo[] = {KC_LCTL, KC_T, COMBO_END};
 
 combo_t key_combos[] = {
+  [USR_HOME_COMBO] = COMBO(home_combo, KC_HOME),
+  [USR_END_COMBO] = COMBO(end_combo, KC_END),
   [USR_CUT_COMBO] = COMBO(cut_combo, USR_CUT),
   [USR_COPY_COMBO] = COMBO(copy_combo, USR_COPY),
   [USR_PASTE_COMBO] = COMBO(paste_combo, USR_PASTE),
