@@ -11,7 +11,9 @@ MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 FORCE_NKRO = yes			# Require N-Key Rollover (for combos)
 OS_DETECTION_ENABLE = yes   # Support shortcuts that perform OS specific actions
-KEY_LOCK_ENABLE = yes		# Support locking for things like running in games.
+KEY_LOCK_ENABLE = yes		# Support locking for things like running in games
+UNICODE_COMMON = yes		# Support for unicode core
+UNICODE_ENABLE = yes		# Support for unicode basic
 
 # Save space
 CONSOLE_ENABLE = no         # Console for debug

@@ -31,6 +31,11 @@
 #define MS_DOWN KC_MS_DOWN
 #define MS_LEFT KC_MS_LEFT
 #define MS_RGHT KC_MS_RIGHT
+#define UNIC_TB UP(UNIC_DOWN_TACK,  UNIC_UP_TACK)
+#define UNIC_JD UP(UNIC_RIGHT_TACK, UNIC_LEFT_TACK)
+#define UNIC_PD UP(UNIC_AND,        UNIC_PRODUCT)
+#define UNIC_EX UP(UNIC_EXISTS,     UNIC_FOR_ALL)
+#define UNIC_LM UP(UNIC_LAMBDA,     UNIC_FUNCTION)
 
 enum LAYERS {
   QWERT, // All the bells and whistles for coding.
@@ -50,6 +55,78 @@ enum custom_keycodes {
   RALT_TAB,
 };
 
+enum unicode_names {
+    UNIC_DOWN_TACK,
+    UNIC_UP_TACK,
+    UNIC_RIGHT_TACK,
+    UNIC_LEFT_TACK,
+    UNIC_AND,
+    UNIC_OR,
+    UNIC_PRODUCT,
+    UNIC_COPRODUCT,
+    UNIC_SUBSET,
+    UNIC_SUM,
+    UNIC_EXISTS,
+    UNIC_ELEMENT_OF,
+    UNIC_NOT_ELEMENT_OF,
+    UNIC_NOT_EXISTS,
+    UNIC_FOR_ALL,
+    UNIC_LAMBDA,
+    UNIC_FUNCTION,
+    UNIC_MULTIMAP,
+    UNIC_PARTIAL_DIFFERENTIAL,
+    UNIC_DELTA,
+    UNIC_ALEPH,
+    UNIC_DOUBLE_N,
+    UNIC_DOUBLE_R,
+    UNIC_DOUBLE_Q,
+    UNIC_DOUBLE_P,
+    UNIC_DOUBLE_Z,
+    UNIC_DOUBLE_H,
+    UNIC_DOUBLE_C,
+    UNIC_EMPTY_SET,
+    UNIC_NEQ,
+    UNIC_ALMOST_EQ,
+    UNIC_DOT,
+    UNIC_MUL,
+};
+
+const uint32_t PROGMEM unicode_map[] = {
+    [UNIC_DOWN_TACK  ] = 0x22A4, // ⊤
+    [UNIC_UP_TACK] = 0x22A5, // ⊥
+    [UNIC_RIGHT_TACK] = 0x22A2, // ⊢
+    [UNIC_LEFT_TACK] = 0x22A3, // ⊣
+    [UNIC_AND  ] = 0x2227, // ∧
+    [UNIC_OR] = 0x2228, // ∨
+    [UNIC_PRODUCT ] = 0x220F, // ∏
+    [UNIC_COPRODUCT] = 0x2210, // ∐
+    [UNIC_SUBSET] = 0x2282, // ⊂
+    [UNIC_SUM  ] = 0x2211, // ∑
+    [UNIC_EXISTS    ] = 0x2203, // ∃
+    [UNIC_ELEMENT_OF] = 0x2208, // ∈
+    [UNIC_NOT_ELEMENT_OF] = 0x2209, // ∉
+    [UNIC_NOT_EXISTS] = 0x2204, // ∄
+    [UNIC_FOR_ALL] = 0x2200, // ∀
+    [UNIC_LAMBDA] = 0x03BB, // λ
+    [UNIC_FUNCTION ] = 0x2192, // →
+    [UNIC_MULTIMAP] = 0x22B8, // ⊸
+    [UNIC_PARTIAL_DIFFERENTIAL] = 0x2202, // ∂
+    [UNIC_DELTA] = 0x0394, // Δ
+    [UNIC_ALEPH] = 0x2135, // ℵ
+    [UNIC_DOUBLE_N] = 0x2115, // ℕ
+    [UNIC_DOUBLE_R] = 0x211D, // ℝ
+    [UNIC_DOUBLE_Q] = 0x211A, // ℚ
+    [UNIC_DOUBLE_P] = 0x2119, // ℙ
+    [UNIC_DOUBLE_Z] = 0x2124, // ℤ
+    [UNIC_DOUBLE_H] = 0x210D, // ℍ
+    [UNIC_DOUBLE_C] = 0x2102, // ℂ
+    [UNIC_EMPTY_SET] = 0x2205, // ∅
+    [UNIC_NEQ] = 0x2260, // ≠
+    [UNIC_ALMOST_EQ] = 0x2248, // ≈
+    [UNIC_DOT] = 0x2219, // ∙
+    [UNIC_MUL] = 0x00D7, // ×
+};
+
 enum combo_events {
   USR_HOME_COMBO,
   USR_END_COMBO,
@@ -60,12 +137,12 @@ enum combo_events {
 };
 
 // Set up combos with modifiers.
-const uint16_t PROGMEM home_combo[] = {KC_SPC, KC_F, COMBO_END};
-const uint16_t PROGMEM end_combo[] = {KC_SPC, KC_G, COMBO_END};
-const uint16_t PROGMEM cut_combo[] = {KC_LCTL, KC_X, COMBO_END};
-const uint16_t PROGMEM copy_combo[] = {KC_LCTL, KC_C, COMBO_END};
+const uint16_t PROGMEM home_combo[] =  {KC_SPC,  KC_F, COMBO_END};
+const uint16_t PROGMEM end_combo[] =   {KC_SPC,  KC_G, COMBO_END};
+const uint16_t PROGMEM cut_combo[] =   {KC_LCTL, KC_X, COMBO_END};
+const uint16_t PROGMEM copy_combo[] =  {KC_LCTL, KC_C, COMBO_END};
 const uint16_t PROGMEM paste_combo[] = {KC_LCTL, KC_V, COMBO_END};
-const uint16_t PROGMEM tab_combo[] = {KC_LCTL, KC_T, COMBO_END};
+const uint16_t PROGMEM tab_combo[] =   {KC_LCTL, KC_T, COMBO_END};
 
 combo_t key_combos[] = {
   [USR_HOME_COMBO] = COMBO(home_combo, KC_HOME),
@@ -101,9 +178,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 [CNTRL] = LAYOUT(
   _______,  _______,  _______,  _______,  _______,  _______,                      _______,  _______,  _______,  KC_LBRC,  KC_RBRC,  _______,
-  _______,  _______,    KC_UP,  _______,  _______,  _______,                      _______,  _______,  _______,  _______,  _______,  _______,
-  _______,  KC_LEFT,  KC_DOWN,  KC_RGHT,  _______,  _______,                      KC_LEFT,  KC_DOWN,    KC_UP,  KC_RGHT,  _______,  _______,
-  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  _______,  KC_MUTE,  QK_LOCK,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,    KC_UP,  UNIC_EX,  _______,  UNIC_TB,                      UNIC_LM,  _______,  _______,  _______,  _______,  _______,
+  _______,  KC_LEFT,  KC_DOWN,  KC_RGHT,  _______,  UNIC_JD,                      KC_LEFT,  KC_DOWN,    KC_UP,  KC_RGHT,  _______,  _______,
+  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  UNIC_PD,  _______,  KC_MUTE,  QK_LOCK,  _______,  _______,  _______,  _______,  _______,  _______,
                       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 )
 };
