@@ -78,9 +78,9 @@ combo_t key_combos[] = {
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [QWERT] = { ENCODER_CCW_CW(KC_RGHT, KC_LEFT), ENCODER_CCW_CW(KC_DOWN, KC_UP) },
+    [QWERT] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD), ENCODER_CCW_CW(MS_WDN, MS_WUP) },
     [FUNCS] = { ENCODER_CCW_CW(MS_RGHT, MS_LEFT), ENCODER_CCW_CW(MS_DOWN, MS_UP) },
-    [CNTRL] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD), ENCODER_CCW_CW(ALT_TAB, RALT_TAB) },
+    [CNTRL] = { ENCODER_CCW_CW(KC_RGHT, KC_LEFT), ENCODER_CCW_CW(KC_DOWN, KC_UP) },
 };
 #endif
 
@@ -107,6 +107,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 )
 };
+
+uint16_t window_switch_modifier(void) {
+    os_variant_t host_os = detected_host_os();
+    if (host_os == OS_MACOS || host_os == OS_IOS) {
+        return KC_LCTL;
+    }
+    return KC_LALT;
+}
 
 void tap_super_with_key(uint16_t keycode, bool pressed) {
   os_variant_t host_os = detected_host_os();
@@ -144,9 +152,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 }
 
 void matrix_scan_user(void) {
-  if (is_alt_tab_active && timer_elapsed(alt_tab_timer) > ALT_TAB_TERM) {
-    unregister_code(KC_LALT);
-    is_alt_tab_active = false;
+  if (is_window_switcher_active && timer_elapsed(window_switcher_timer) > ALT_TAB_TERM) {
+    unregister_code(window_switch_modifier());
+    is_window_switcher_active = false;
   }
 }
 
@@ -212,21 +220,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         /* Custom keys! */
         case ALT_TAB:
-          if (!is_alt_tab_active) {
-            register_code(KC_LALT);
-            is_alt_tab_active = true;
+          if (!is_window_switcher_active) {
+            register_code(window_switch_modifier());
+            is_window_switcher_active = true;
           }
-          alt_tab_timer = timer_read();
+          window_switcher_timer = timer_read();
           if (pressed) {
             tap_code16(KC_TAB);
           }
           break;
         case RALT_TAB:
-          if (!is_alt_tab_active) {
-            register_code(KC_LALT);
-            is_alt_tab_active = true;
+          if (!is_window_switcher_active) {
+            register_code(window_switch_modifier());
+            is_window_switcher_active = true;
           }
-          alt_tab_timer = timer_read();
+          window_switcher_timer = timer_read();
           if (pressed) {
             register_code(KC_LSFT);
             tap_code16(KC_TAB);
