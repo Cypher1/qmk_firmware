@@ -89,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    KC_GRV,     KC_1,     KC_2,     KC_3,     KC_4,     KC_5,                         KC_6,     KC_7,     KC_8,     KC_9,     KC_0,  KC_MINS,
    KC_TAB,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,                         KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,   KC_EQL,
    KC_ESC,     KC_A,     KC_S,     KC_D,     KC_F,     KC_G,                         KC_H,     KC_J,     KC_K,     KC_L,  KC_SCLN,  KC_QUOT,
-  KC_LSFT,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B, RALT_TAB,  ALT_TAB,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,  MT_RSHN,
+  KC_LSFT,     KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,  KC_MUTE,  QK_LOCK,     KC_N,     KC_M,  KC_COMM,   KC_DOT,  KC_SLSH,  MT_RSHN,
                       KC_BSLS,  KC_LALT,  KC_LGUI,  KC_LCTL,   KC_SPC,  LC_BSPC,   LF_DEL,  KC_PGUP,  KC_PGDN,  KC_BSLS
 ),
 [FUNCS] = LAYOUT(
@@ -97,13 +97,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,  _______,  _______,  _______,  _______,  _______,                      MS_WLFT,   MS_WDN,   MS_WUP, MS_WRGHT,  _______,   KC_F12,
   _______,  _______,  _______,  _______,  KC_HOME,   KC_END,                      MS_LEFT,  MS_DOWN,    MS_UP,  MS_RGHT,  _______,  _______,
   _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  _______,  _______,  _______,  MS_BTN1,  MS_BTN3,  MS_BTN2,  _______,  _______,  _______,
-                      _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
+                      _______,  _______,  _______,  _______, RALT_TAB,  ALT_TAB,  _______,  _______,  _______,  _______
 ),
 [CNTRL] = LAYOUT(
   _______,  _______,  _______,  _______,  _______,  _______,                      _______,  _______,  _______,  KC_LBRC,  KC_RBRC,  _______,
   _______,  _______,    KC_UP,  _______,  _______,  _______,                      _______,  _______,  _______,  _______,  _______,  _______,
   _______,  KC_LEFT,  KC_DOWN,  KC_RGHT,  _______,  _______,                      KC_LEFT,  KC_DOWN,    KC_UP,  KC_RGHT,  _______,  _______,
-  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  _______,  KC_MUTE,  QK_LOCK,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  KC_MPRV,  KC_MPLY,  KC_MNXT,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
                       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 )
 };
